@@ -1,0 +1,43 @@
+{
+	"name": "chobittube",
+	"private": true,
+	"version": "0.1.0",
+	"type": "module",
+	"description": "YouTuber向け。公開動画から𝕏エゴサへのショートカット",
+	"scripts": {
+		"dev": "vite",
+		"build": "wrangler types && tsc -b && vite build",
+		"preview": "vite preview",
+		"deploy": "pnpm build && wrangler deploy",
+		"check": "wrangler types && tsc -b && biome check .",
+		"lint": "biome check .",
+		"format": "biome check --write .",
+		"test": "vitest run",
+		"cf-typegen": "wrangler types",
+		"astryx": "node node_modules/@astryxdesign/cli/clients/cli/bin/astryx.mjs"
+	},
+	"browserslist": [
+		"last 1 Chrome version"
+	],
+	"dependencies": {
+		"@astryxdesign/core": "^0.6.0",
+		"@astryxdesign/theme-matcha": "^0.6.0",
+		"@stylexjs/stylex": "^0.19.0",
+		"react": "^19.3.0",
+		"react-dom": "^19.3.0"
+	},
+	"devDependencies": {
+		"@astryxdesign/cli": "^0.6.0",
+		"@biomejs/biome": "^2.5.13",
+		"@cloudflare/vite-plugin": "^1.54.8",
+		"@cloudflare/workers-types": "^5.20260911.1",
+		"@stylexjs/unplugin": "^0.19.0",
+		"@types/react": "^19.3.0",
+		"@types/react-dom": "^19.3.0",
+		"@vitejs/plugin-react": "^6.1.1",
+		"typescript": "^7.0.2",
+		"vite": "^8.3.0",
+		"vitest": "^5.0.0",
+		"wrangler": "^4.131.1"
+	}
+}

@@ -1,3 +1,50 @@
-@import "@astryxdesign/core/reset.css";
-@import "@astryxdesign/core/astryx.css";
-@import "@astryxdesign/theme-matcha/theme.css";
+html,
+body,
+#root {
+	min-height: 100%;
+}
+
+body {
+	margin: 0;
+	background: var(--color-background-primary, #fafafa);
+}
+
+/* ヘッダーブランドロゴ: icon + chobit + tube（chobitfile と同型） */
+.brand-logo {
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-2, 8px);
+	margin: 0;
+	font-family: "Jersey 15", ui-monospace, monospace;
+	font-weight: 400;
+	letter-spacing: 0.02em;
+}
+
+.brand-logo__icon {
+	display: block;
+	width: 28px;
+	height: 28px;
+	flex-shrink: 0;
+	image-rendering: pixelated;
+	border-radius: var(--radius-sm, 4px);
+}
+
+.brand-logo__wordmark {
+	display: inline-flex;
+	align-items: baseline;
+	line-height: 1;
+}
+
+.brand-logo__chobit {
+	color: #000000;
+	font-weight: inherit;
+}
+
+.brand-logo__tube {
+	margin-inline-start: 0.06em;
+	padding: 0 0.12em;
+	background: #ff6699;
+	color: #ffffff;
+	font-weight: inherit;
+	border-radius: 0;
+}

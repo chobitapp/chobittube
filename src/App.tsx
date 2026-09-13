@@ -1,35 +1,23 @@
-import { AppShell } from "@astryxdesign/core/AppShell";
 import { Banner } from "@astryxdesign/core/Banner";
 import { Button } from "@astryxdesign/core/Button";
+import { Card } from "@astryxdesign/core/Card";
+import { Center } from "@astryxdesign/core/Center";
 import { EmptyState } from "@astryxdesign/core/EmptyState";
+import { FormLayout } from "@astryxdesign/core/FormLayout";
+import { Heading } from "@astryxdesign/core/Heading";
 import { Icon } from "@astryxdesign/core/Icon";
-import {
-	HStack,
-	Layout,
-	LayoutContent,
-	StackItem,
-	VStack,
-} from "@astryxdesign/core/Layout";
+import { HStack, VStack } from "@astryxdesign/core/Layout";
 import { Link } from "@astryxdesign/core/Link";
 import { List, ListItem } from "@astryxdesign/core/List";
-import { Section } from "@astryxdesign/core/Section";
 import { Spinner } from "@astryxdesign/core/Spinner";
-import { Heading, Text } from "@astryxdesign/core/Text";
+import { Text } from "@astryxdesign/core/Text";
 import { TextInput } from "@astryxdesign/core/TextInput";
 import { Thumbnail } from "@astryxdesign/core/Thumbnail";
 import { Timestamp } from "@astryxdesign/core/Timestamp";
-import { TopNav, TopNavHeading } from "@astryxdesign/core/TopNav";
-import * as stylex from "@stylexjs/stylex";
 import { useCallback, useEffect, useState } from "react";
 import type { ApiError, ChannelVideosResponse } from "../shared/types";
 
 const STORAGE_KEY = "chobittube:channel";
-
-const styles = stylex.create({
-	list: {
-		width: "100%",
-	},
-});
 
 function readStoredChannel(): string {
 	const fromUrl = new URLSearchParams(window.location.search).get("channel");
@@ -115,149 +103,157 @@ export default function App() {
 	}, [loadVideos]);
 
 	return (
-		<AppShell
-			height="auto"
-			contentPadding={4}
-			topNav={
-				<TopNav
-					label="chobittube"
-					heading={<TopNavHeading heading="chobittube" headingHref="/" />}
-				/>
-			}
-		>
-			<Layout height="auto" contentWidth={640} padding={0}>
-				<LayoutContent>
-					<VStack gap={6}>
-						<VStack gap={1}>
-							<Heading level={1}>公開動画のエゴサ</Heading>
-							<Text color="secondary">
-								チャンネルの公開動画から、動画IDだけで𝕏を検索します。URLではなくIDで探すのでヒットしやすいショートカットです。
-							</Text>
-						</VStack>
-
-						<Section>
-							<form
-								onSubmit={(event) => {
-									event.preventDefault();
-									void loadVideos(channelInput);
-								}}
-							>
-								<VStack gap={3}>
-									<HStack gap={2} vAlign="end" wrap="wrap">
-										<StackItem size="fill">
-											<TextInput
-												label="YouTube ID"
-												description="チャンネルID（UC...）、@ハンドル、チャンネルURL"
-												placeholder="UC... または @handle"
-												value={channelInput}
-												onChange={setChannelInput}
-												hasClear
-												width="100%"
-												isRequired
-												htmlName="channel"
-											/>
-										</StackItem>
-										<Button
-											type="submit"
-											label="動画を表示"
-											variant="primary"
-											isLoading={isLoading}
-										/>
-									</HStack>
-								</VStack>
-							</form>
-						</Section>
-
-						{error ? (
-							<Banner
-								status="error"
-								title="動画一覧を取得できませんでした"
-								description={error}
+		<Center axis="horizontal" minHeight="100dvh" width="100%">
+			<VStack gap={4} padding={4} width="100%" maxWidth={512}>
+				<Card maxWidth={480} width="100%" padding={5}>
+					<VStack gap={4}>
+						<Heading level={1} className="brand-logo">
+							<img
+								src="/favicon.png"
+								alt=""
+								width={28}
+								height={28}
+								className="brand-logo__icon"
 							/>
-						) : null}
+							<span className="brand-logo__wordmark">
+								<span className="brand-logo__chobit">chobit</span>
+								<span className="brand-logo__tube">tube</span>
+							</span>
+						</Heading>
 
-						{isLoading && !data ? (
-							<HStack gap={2} vAlign="center">
-								<Spinner size="sm" />
-								<Text color="secondary">公開動画を読み込んでいます</Text>
-							</HStack>
-						) : null}
+						<Text color="secondary">
+							チャンネルの公開動画から、動画IDだけで𝕏を検索します。URLではなくIDで探すのでヒットしやすいショートカットです。
+						</Text>
 
-						{data && data.videos.length === 0 ? (
-							<EmptyState
-								title="公開動画がありません"
-								description={`${data.channel.title} のRSSには直近の公開動画がありません。`}
-								icon={<Icon icon="search" />}
-							/>
-						) : null}
+						<form
+							onSubmit={(event) => {
+								event.preventDefault();
+								void loadVideos(channelInput);
+							}}
+						>
+							<VStack gap={4}>
+								<FormLayout direction="vertical">
+									<TextInput
+										label="YouTube ID"
+										description="チャンネルID（UC...）、@ハンドル、チャンネルURL"
+										placeholder="UC... または @handle"
+										value={channelInput}
+										onChange={setChannelInput}
+										hasClear
+										width="100%"
+										isRequired
+										htmlName="channel"
+									/>
+								</FormLayout>
 
-						{data && data.videos.length > 0 ? (
-							<Section padding={0}>
-								<List
-									xstyle={styles.list}
-									hasDividers
-									header={
-										<VStack gap={1}>
-											<Heading level={2}>{data.channel.title}</Heading>
-											<Text color="secondary" type="supporting">
-												直近 {data.videos.length}{" "}
-												本（YouTubeの公開フィードは最新15本まで）
-											</Text>
-										</VStack>
-									}
-								>
-									{data.videos.map((video) => (
-										<ListItem
-											key={video.id}
-											label={video.title}
-											startContent={
-												<Thumbnail
-													src={video.thumbnailUrl}
-													alt=""
-													label={video.title}
-												/>
-											}
-											description={
-												<VStack gap={2}>
-													<HStack gap={2} vAlign="center" wrap="wrap">
-														{video.publishedAt ? (
-															<Timestamp value={video.publishedAt} />
-														) : null}
-														<Text type="code">{video.id}</Text>
-														<Link
-															href={video.url}
-															isExternalLink
-															type="supporting"
-														>
-															YouTube
-														</Link>
-													</HStack>
-													<Button
-														label="𝕏で検索"
-														href={video.xSearchUrl}
-														target="_blank"
-														rel="noopener noreferrer"
-														variant="primary"
-														size="sm"
-													/>
-												</VStack>
-											}
-										/>
-									))}
-								</List>
-							</Section>
-						) : null}
+								{error ? (
+									<Banner
+										status="error"
+										title="動画一覧を取得できませんでした"
+										description={error}
+									/>
+								) : null}
 
-						{!isLoading && !data && !error ? (
-							<EmptyState
-								title="チャンネルを入力してください"
-								description="自分のYouTubeチャンネルIDを入れると、公開動画ごとの𝕏検索リンクが出ます。"
-								icon={<Icon icon="search" />}
-							/>
-						) : null}
+								<Button
+									type="submit"
+									label="動画を表示"
+									variant="primary"
+									isLoading={isLoading}
+									isDisabled={isLoading}
+								/>
+							</VStack>
+						</form>
 					</VStack>
-				</LayoutContent>
-			</Layout>
-		</AppShell>
+				</Card>
+
+				{isLoading && !data ? (
+					<Center axis="horizontal" width="100%">
+						<HStack gap={2} vAlign="center">
+							<Spinner size="sm" />
+							<Text color="secondary">公開動画を読み込んでいます</Text>
+						</HStack>
+					</Center>
+				) : null}
+
+				{data && data.videos.length === 0 ? (
+					<Card maxWidth={480} width="100%" padding={5}>
+						<EmptyState
+							title="公開動画がありません"
+							description={`${data.channel.title} のRSSには直近の公開動画がありません。`}
+							icon={<Icon icon="search" />}
+						/>
+					</Card>
+				) : null}
+
+				{data && data.videos.length > 0 ? (
+					<Card maxWidth={480} width="100%" padding={5}>
+						<VStack gap={3} width="100%">
+							<VStack gap={1}>
+								<Heading level={2}>{data.channel.title}</Heading>
+								<Text color="secondary" type="supporting">
+									直近 {data.videos.length}{" "}
+									本（YouTubeの公開フィードは最新15本まで）
+								</Text>
+							</VStack>
+							<List hasDividers>
+								{data.videos.map((video) => (
+									<ListItem
+										key={video.id}
+										label={video.title}
+										startContent={
+											<Thumbnail
+												src={video.thumbnailUrl}
+												alt=""
+												label={video.title}
+											/>
+										}
+										description={
+											<VStack gap={2}>
+												<HStack gap={2} vAlign="center" wrap="wrap">
+													{video.publishedAt ? (
+														<Timestamp value={video.publishedAt} />
+													) : null}
+													<Text type="code">{video.id}</Text>
+													<Link
+														href={video.url}
+														isExternalLink
+														type="supporting"
+													>
+														YouTube
+													</Link>
+												</HStack>
+												<Button
+													label="𝕏で検索"
+													href={video.xSearchUrl}
+													target="_blank"
+													rel="noopener noreferrer"
+													variant="primary"
+													size="sm"
+												/>
+											</VStack>
+										}
+									/>
+								))}
+							</List>
+						</VStack>
+					</Card>
+				) : null}
+
+				<Center axis="horizontal">
+					<HStack gap={3} vAlign="center">
+						<Link
+							href="https://github.com/zaru/chobittube"
+							isExternalLink
+							isStandalone
+						>
+							GitHub
+						</Link>
+						<Link href="https://nanabit.dev/" isExternalLink isStandalone>
+							nanabit
+						</Link>
+					</HStack>
+				</Center>
+			</VStack>
+		</Center>
 	);
 }

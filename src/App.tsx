@@ -122,7 +122,7 @@ export default function App() {
 						</Heading>
 
 						<Text color="secondary">
-							チャンネルの公開動画から、動画IDだけで𝕏を検索します。URLではなくIDで探すのでヒットしやすいショートカットです。
+							チャンネルの動画言及ポストを𝕏で検索します。
 						</Text>
 
 						<form
@@ -191,8 +191,7 @@ export default function App() {
 							<VStack gap={1}>
 								<Heading level={2}>{data.channel.title}</Heading>
 								<Text color="secondary" type="supporting">
-									直近 {data.videos.length}{" "}
-									本（YouTubeの公開フィードは最新15本まで）
+									直近 {data.videos.length} 本
 								</Text>
 							</VStack>
 							<List hasDividers>

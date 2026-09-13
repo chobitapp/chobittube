@@ -3,6 +3,14 @@
 	"name": "chobittube",
 	"main": "./worker/index.ts",
 	"compatibility_date": "2026-09-13",
+	"workers_dev": false,
+	"preview_urls": false,
+	"routes": [
+		{
+			"pattern": "chobittube.nanabit.dev",
+			"custom_domain": true
+		}
+	],
 	"observability": {
 		"enabled": true
 	},

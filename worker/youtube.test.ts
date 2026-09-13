@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
 	decodeXmlEntities,
 	extractChannelIdFromHtml,
+	extractChannelIdFromResolveUrl,
 	feedUrlForQuery,
 	parseChannelInput,
 	parseYoutubeFeed,
@@ -44,12 +45,16 @@ describe("parseChannelInput", () => {
 
 	it("accepts a handle with or without @", () => {
 		expect(parseChannelInput("@GoogleDevelopers")).toEqual({
-			kind: "user",
+			kind: "handle",
 			value: "GoogleDevelopers",
 		});
 		expect(parseChannelInput("GoogleDevelopers")).toEqual({
-			kind: "user",
+			kind: "handle",
 			value: "GoogleDevelopers",
+		});
+		expect(parseChannelInput("@moozaru")).toEqual({
+			kind: "handle",
+			value: "moozaru",
 		});
 	});
 
@@ -65,8 +70,12 @@ describe("parseChannelInput", () => {
 		expect(
 			parseChannelInput("https://www.youtube.com/@GoogleDevelopers/videos"),
 		).toEqual({
-			kind: "user",
+			kind: "handle",
 			value: "GoogleDevelopers",
+		});
+		expect(parseChannelInput("https://www.youtube.com/c/moozaru")).toEqual({
+			kind: "handle",
+			value: "moozaru",
 		});
 		expect(parseChannelInput("youtube.com/user/GoogleDevelopers")).toEqual({
 			kind: "user",
@@ -146,5 +155,38 @@ describe("extractChannelIdFromHtml", () => {
 				'<script>{"channelId":"UC_x5XG1OV2P6uZZ5FSM9Ttw"}</script>',
 			),
 		).toBe("UC_x5XG1OV2P6uZZ5FSM9Ttw");
+	});
+
+	it("prefers RSS autodiscovery over a later browseId", () => {
+		expect(
+			extractChannelIdFromHtml(
+				`"browseId":"UCxxxxxxxxxxxxxxxxxxxxxx"<link rel="alternate" type="application/rss+xml" title="RSS" href="https://www.youtube.com/feeds/videos.xml?channel_id=UC_x5XG1OV2P6uZZ5FSM9Ttw">`,
+			),
+		).toBe("UC_x5XG1OV2P6uZZ5FSM9Ttw");
+	});
+
+	it("skips low-confidence browseId when asked", () => {
+		expect(
+			extractChannelIdFromHtml('"browseId":"UC_x5XG1OV2P6uZZ5FSM9Ttw"', {
+				allowLowConfidence: false,
+			}),
+		).toBeNull();
+		expect(
+			extractChannelIdFromHtml('"browseId":"UC_x5XG1OV2P6uZZ5FSM9Ttw"'),
+		).toBe("UC_x5XG1OV2P6uZZ5FSM9Ttw");
+	});
+});
+
+describe("extractChannelIdFromResolveUrl", () => {
+	it("reads browseId from Innertube resolve_url payload", () => {
+		expect(
+			extractChannelIdFromResolveUrl({
+				endpoint: {
+					browseEndpoint: { browseId: "UCLPHXwLp90A5R69Eltxo-sg" },
+				},
+			}),
+		).toBe("UCLPHXwLp90A5R69Eltxo-sg");
+		expect(extractChannelIdFromResolveUrl({ error: { code: 404 } })).toBeNull();
+		expect(extractChannelIdFromResolveUrl(null)).toBeNull();
 	});
 });

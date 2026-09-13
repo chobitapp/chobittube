@@ -12,7 +12,10 @@ const YOUTUBE_HOSTS = new Set([
 
 export type ChannelQuery =
 	| { kind: "channelId"; value: string }
-	| { kind: "user"; value: string };
+	| { kind: "user"; value: string }
+	| { kind: "handle"; value: string };
+
+type FeedQuery = Extract<ChannelQuery, { kind: "channelId" | "user" }>;
 
 export class YoutubeLookupError extends Error {
 	readonly status: number;
@@ -51,7 +54,7 @@ export function parseChannelInput(raw: string): ChannelQuery {
 		);
 	}
 
-	return { kind: "user", value: handle };
+	return { kind: "handle", value: handle };
 }
 
 function parseYoutubeUrl(input: string): ChannelQuery | null {
@@ -74,10 +77,15 @@ function parseYoutubeUrl(input: string): ChannelQuery | null {
 
 	const handleMatch = url.pathname.match(/\/@([^/]+)/);
 	if (handleMatch) {
-		return { kind: "user", value: decodeURIComponent(handleMatch[1]) };
+		return { kind: "handle", value: decodeURIComponent(handleMatch[1]) };
 	}
 
-	const userMatch = url.pathname.match(/\/(?:user|c)\/([^/]+)/);
+	const customMatch = url.pathname.match(/\/c\/([^/]+)/);
+	if (customMatch) {
+		return { kind: "handle", value: decodeURIComponent(customMatch[1]) };
+	}
+
+	const userMatch = url.pathname.match(/\/user\/([^/]+)/);
 	if (userMatch) {
 		return { kind: "user", value: decodeURIComponent(userMatch[1]) };
 	}
@@ -85,7 +93,7 @@ function parseYoutubeUrl(input: string): ChannelQuery | null {
 	return null;
 }
 
-export function feedUrlForQuery(query: ChannelQuery): string {
+export function feedUrlForQuery(query: FeedQuery): string {
 	const params = new URLSearchParams(
 		query.kind === "channelId"
 			? { channel_id: query.value }
@@ -189,23 +197,64 @@ export function parseYoutubeFeed(xml: string): ChannelVideosResponse {
 	};
 }
 
-export function extractChannelIdFromHtml(html: string): string | null {
-	const patterns = [
-		/"channelId":"(UC[\w-]{22})"/,
-		/"externalId":"(UC[\w-]{22})"/,
-		/"browseId":"(UC[\w-]{22})"/,
-		/<link rel="canonical" href="https:\/\/www\.youtube\.com\/channel\/(UC[\w-]{22})"/,
-		/"canonicalBaseUrl":"\/channel\/(UC[\w-]{22})"/,
-	];
+const CHANNEL_ID_FROM_HTML: { re: RegExp; confident: boolean }[] = [
+	{ re: /feeds\/videos\.xml\?channel_id=(UC[\w-]{22})/, confident: true },
+	{
+		re: /<link rel="canonical" href="https:\/\/www\.youtube\.com\/channel\/(UC[\w-]{22})"/,
+		confident: true,
+	},
+	{
+		re: /property="og:url" content="https:\/\/www\.youtube\.com\/channel\/(UC[\w-]{22})"/,
+		confident: true,
+	},
+	{ re: /itemprop="identifier" content="(UC[\w-]{22})"/, confident: true },
+	{ re: /"channelId":"(UC[\w-]{22})"/, confident: true },
+	{ re: /"externalId":"(UC[\w-]{22})"/, confident: true },
+	{ re: /"canonicalBaseUrl":"\/channel\/(UC[\w-]{22})"/, confident: true },
+	{ re: /"browseId":"(UC[\w-]{22})"/, confident: false },
+];
 
-	for (const pattern of patterns) {
-		const match = html.match(pattern);
+export function extractChannelIdFromHtml(
+	html: string,
+	options: { allowLowConfidence?: boolean } = {},
+): string | null {
+	const allowLowConfidence = options.allowLowConfidence ?? true;
+	for (const { re, confident } of CHANNEL_ID_FROM_HTML) {
+		if (!confident && !allowLowConfidence) {
+			continue;
+		}
+		const match = html.match(re);
 		if (match) {
 			return match[1];
 		}
 	}
 
 	return null;
+}
+
+export function extractChannelIdFromResolveUrl(
+	payload: unknown,
+): string | null {
+	if (typeof payload !== "object" || payload == null) {
+		return null;
+	}
+
+	const endpoint = (payload as { endpoint?: unknown }).endpoint;
+	if (typeof endpoint !== "object" || endpoint == null) {
+		return null;
+	}
+
+	const browse = (endpoint as { browseEndpoint?: unknown }).browseEndpoint;
+	if (typeof browse !== "object" || browse == null) {
+		return null;
+	}
+
+	const browseId = (browse as { browseId?: unknown }).browseId;
+	if (typeof browseId !== "string" || !CHANNEL_ID_RE.test(browseId)) {
+		return null;
+	}
+
+	return browseId;
 }
 
 const FETCH_HEADERS = {
@@ -234,7 +283,7 @@ async function readLimitedText(
 			}
 			bytes += value.byteLength;
 			result += decoder.decode(value, { stream: true });
-			if (extractChannelIdFromHtml(result)) {
+			if (extractChannelIdFromHtml(result, { allowLowConfidence: false })) {
 				break;
 			}
 		}
@@ -272,47 +321,115 @@ async function fetchFeedXml(url: string): Promise<string | null> {
 	return response.text();
 }
 
-async function resolveHandleToChannelId(handle: string): Promise<string> {
-	const pageUrl = `https://www.youtube.com/@${encodeURIComponent(handle)}`;
-	const response = await fetch(pageUrl, {
+const HANDLE_PAGE_HEADERS = {
+	"User-Agent":
+		"Mozilla/5.0 (compatible; chobittube/0.1; +https://github.com/zaru/chobittube)",
+	Accept: "text/html",
+};
+
+const INNERTUBE_RESOLVE_URL =
+	"https://www.youtube.com/youtubei/v1/navigation/resolve_url?prettyPrint=false";
+
+function channelPageUrls(handle: string): string[] {
+	const encoded = encodeURIComponent(handle);
+	return [
+		`https://www.youtube.com/@${encoded}`,
+		`https://www.youtube.com/c/${encoded}`,
+	];
+}
+
+async function resolveUrlViaInnertube(pageUrl: string): Promise<string | null> {
+	const response = await fetch(INNERTUBE_RESOLVE_URL, {
+		method: "POST",
 		headers: {
-			...FETCH_HEADERS,
-			"User-Agent":
-				"Mozilla/5.0 (compatible; chobittube/0.1; +https://github.com/zaru/chobittube)",
-			Accept: "text/html",
+			...HANDLE_PAGE_HEADERS,
+			Accept: "application/json",
+			"Content-Type": "application/json",
 		},
+		body: JSON.stringify({
+			context: {
+				client: {
+					clientName: "WEB",
+					clientVersion: "2.20240101.00.00",
+				},
+			},
+			url: pageUrl,
+		}),
+		cf: { cacheTtl: 3600, cacheEverything: true },
+	});
+
+	if (!response.ok) {
+		return null;
+	}
+
+	const payload: unknown = await response.json();
+	return extractChannelIdFromResolveUrl(payload);
+}
+
+async function scrapeChannelIdFromPage(
+	pageUrl: string,
+): Promise<string | null> {
+	const response = await fetch(pageUrl, {
+		headers: HANDLE_PAGE_HEADERS,
 		redirect: "follow",
 		cf: { cacheTtl: 3600, cacheEverything: true },
 	});
 
 	if (!response.ok) {
-		throw new YoutubeLookupError(
-			"チャンネルが見つかりませんでした。ID を確認してください",
-			404,
-		);
+		return null;
 	}
 
-	const html = await readLimitedText(response, 512_000);
-	const channelId = extractChannelIdFromHtml(html);
-	if (!channelId) {
-		throw new YoutubeLookupError(
-			"チャンネルが見つかりませんでした。ID を確認してください",
-			404,
-		);
+	const html = await readLimitedText(response, 2_000_000);
+	return extractChannelIdFromHtml(html);
+}
+
+async function resolveHandleToChannelId(handle: string): Promise<string> {
+	const urls = channelPageUrls(handle);
+
+	for (const url of urls) {
+		try {
+			const channelId = await resolveUrlViaInnertube(url);
+			if (channelId) {
+				return channelId;
+			}
+		} catch {
+			// HTML スクレイプにフォールバックする
+		}
 	}
 
-	return channelId;
+	for (const url of urls) {
+		try {
+			const channelId = await scrapeChannelIdFromPage(url);
+			if (channelId) {
+				return channelId;
+			}
+		} catch {
+			// 次の URL を試す
+		}
+	}
+
+	throw new YoutubeLookupError(
+		"チャンネルが見つかりませんでした。ID を確認してください",
+		404,
+	);
 }
 
 export async function fetchChannelVideos(
 	rawQuery: string,
 ): Promise<ChannelVideosResponse> {
 	const query = parseChannelInput(rawQuery);
+	const feedQuery: FeedQuery =
+		query.kind === "handle"
+			? {
+					kind: "channelId",
+					value: await resolveHandleToChannelId(query.value),
+				}
+			: query;
 
-	let xml = await fetchFeedXml(feedUrlForQuery(query));
+	let xml = await fetchFeedXml(feedUrlForQuery(feedQuery));
 
-	if (xml == null && query.kind === "user") {
-		const channelId = await resolveHandleToChannelId(query.value);
+	if (xml == null && feedQuery.kind === "user") {
+		const channelId = await resolveHandleToChannelId(feedQuery.value);
 		xml = await fetchFeedXml(
 			feedUrlForQuery({ kind: "channelId", value: channelId }),
 		);

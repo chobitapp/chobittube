@@ -43,5 +43,5 @@ pnpm deploy
 次のいずれでも動きます。
 
 - チャンネルID（`UC` から始まる24文字）
-- `@handle`
-- チャンネルURL（`youtube.com/@name` / `youtube.com/channel/UC...`）
+- `@handle`（旧 `/c/name` カスタムURLも含む）
+- チャンネルURL（`youtube.com/@name` / `youtube.com/c/name` / `youtube.com/channel/UC...`）

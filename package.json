@@ -4,6 +4,11 @@
 	"version": "0.1.0",
 	"type": "module",
 	"description": "YouTuber向け。公開動画から𝕏エゴサへのショートカット",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/chobitapp/chobittube.git"
+	},
+	"homepage": "https://chobittube.nanabit.dev/",
 	"scripts": {
 		"dev": "vite",
 		"build": "wrangler types && tsc -b && vite build",

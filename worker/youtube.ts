@@ -258,7 +258,7 @@ export function extractChannelIdFromResolveUrl(
 }
 
 const FETCH_HEADERS = {
-	"User-Agent": "chobittube/0.1 (+https://github.com/zaru/chobittube)",
+	"User-Agent": "chobittube/0.1 (+https://github.com/chobitapp/chobittube)",
 	Accept: "application/atom+xml,application/xml,text/xml,text/html;q=0.8",
 };
 
@@ -323,7 +323,7 @@ async function fetchFeedXml(url: string): Promise<string | null> {
 
 const HANDLE_PAGE_HEADERS = {
 	"User-Agent":
-		"Mozilla/5.0 (compatible; chobittube/0.1; +https://github.com/zaru/chobittube)",
+		"Mozilla/5.0 (compatible; chobittube/0.1; +https://github.com/chobitapp/chobittube)",
 	Accept: "text/html",
 };
 

@@ -241,7 +241,7 @@ export default function App() {
 				<Center axis="horizontal">
 					<HStack gap={3} vAlign="center">
 						<Link
-							href="https://github.com/zaru/chobittube"
+							href="https://github.com/chobitapp/chobittube"
 							isExternalLink
 							isStandalone
 						>

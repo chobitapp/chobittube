@@ -3,6 +3,7 @@
 	"private": true,
 	"version": "0.1.0",
 	"type": "module",
+	"packageManager": "pnpm@11.22.0",
 	"description": "YouTuber向け。公開動画から𝕏エゴサへのショートカット",
 	"repository": {
 		"type": "git",

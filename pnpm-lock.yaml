@@ -10,32 +10,32 @@ importers:
     dependencies:
       '@astryxdesign/core':
         specifier: ^0.6.0
-        version: 0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        version: 0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@astryxdesign/theme-neutral':
         specifier: ^0.6.0
-        version: 0.6.0(@astryxdesign/core@0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0)
+        version: 0.6.0(@astryxdesign/core@0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
       '@stylexjs/stylex':
         specifier: ^0.19.0
         version: 0.19.0
       react:
-        specifier: ^19.3.0
-        version: 19.3.0
+        specifier: ^19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: ^19.3.0
-        version: 19.3.0(react@19.3.0)
+        specifier: ^19.3.1
+        version: 19.3.1(react@19.3.1)
     devDependencies:
       '@astryxdesign/cli':
         specifier: ^0.6.0
-        version: 0.6.0(@astryxdesign/core@0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(@astryxdesign/theme-neutral@0.6.0(@astryxdesign/core@0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0))(gpt-tokenizer@3.4.0)(supports-color@10.2.2)
+        version: 0.6.0(@astryxdesign/core@0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@astryxdesign/theme-neutral@0.6.0(@astryxdesign/core@0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1))(gpt-tokenizer@3.4.0)(supports-color@10.2.2)
       '@biomejs/biome':
         specifier: ^2.5.15
         version: 2.5.15
       '@cloudflare/vite-plugin':
         specifier: ^1.63.1
-        version: 1.63.1(vite@8.3.4(esbuild@0.28.2)(jiti@2.7.0))(wrangler@4.149.0(@cloudflare/workers-types@5.20261010.1))
+        version: 1.63.1(vite@8.3.4(esbuild@0.28.2)(jiti@2.7.0))(wrangler@4.149.0(@cloudflare/workers-types@5.20261016.1))
       '@cloudflare/workers-types':
-        specifier: ^5.20261010.1
-        version: 5.20261010.1
+        specifier: ^5.20261016.1
+        version: 5.20261016.1
       '@types/react':
         specifier: ^19.3.0
         version: 19.3.0
@@ -56,7 +56,7 @@ importers:
         version: 5.0.3(vite@8.3.4(esbuild@0.28.2)(jiti@2.7.0))
       wrangler:
         specifier: ^4.149.0
-        version: 4.149.0(@cloudflare/workers-types@5.20261010.1)
+        version: 4.149.0(@cloudflare/workers-types@5.20261016.1)
 
 packages:
 
@@ -377,8 +377,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@cloudflare/workers-types@5.20261010.1':
-    resolution: {integrity: sha512-Csvu2Wsd8JWnP8HNg/uAAEYzoGw+eKEvoftoHrbMWuFDoC0g6e5XSP8XO9vJsdjjVpPaURdFoL3g/xpZSdQr3Q==}
+  '@cloudflare/workers-types@5.20261016.1':
+    resolution: {integrity: sha512-I8OJdPl3M6TIl9ksU3wtEyWVhSE8E8txJ/vGOv3SkhjcvN8uMjyFmMvRsNOZgzMe5xYFQ0LctmiGqTwR7DbZ6w==}
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -1395,13 +1395,13 @@ packages:
     resolution: {integrity: sha512-49cGhUbXj8Qenv0iTMxA1cFBzxXoctpC9Ujd77t1WcbJIr6nF/eI7g/8MgxrYldFRuAXvja7xQRwavoW7kgrxQ==}
     engines: {node: ^10 || ^12 || >=14}
 
-  react-dom@19.3.0:
-    resolution: {integrity: sha512-JDk8dgif51OjFoDE70+OT9ICyYr+69HlmihNwp1+Nsfbna3t5sIiCa9ZJktDmQ4/1b/rn26hIAR2uYXDMr5r0Q==}
+  react-dom@19.3.1:
+    resolution: {integrity: sha512-Y0bARz53lhEC1NMCASs0/j+faB/zqt3R8hpvg1e8+61ZVJ4UL0UdC4cBbXfZMcIuhrfgeILTLe+ZeBCavQPtKQ==}
     peerDependencies:
-      react: ^19.3.0
+      react: ^19.3.1
 
-  react@19.3.0:
-    resolution: {integrity: sha512-E8LUcbtBWt20bbl2YoHfx4ZDBdxVTfOKtCZn9cDSJ4l6/nuoApcpIBcj47t2wZoVX8g2ZHuMHbiShgCR1T5Sog==}
+  react@19.3.1:
+    resolution: {integrity: sha512-QNhWdt7nrgVWWQG58QuGsAR3jv3Hbe4mb4vz7w2csnHavciZJgda1CPNaldF6eVxv90ud3jUXpKlHL69gO38yw==}
     engines: {node: '>=0.10.0'}
 
   recast@0.23.21:
@@ -1648,7 +1648,7 @@ packages:
 
 snapshots:
 
-  '@astryxdesign/cli@0.6.0(@astryxdesign/core@0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(@astryxdesign/theme-neutral@0.6.0(@astryxdesign/core@0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0))(gpt-tokenizer@3.4.0)(supports-color@10.2.2)':
+  '@astryxdesign/cli@0.6.0(@astryxdesign/core@0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@astryxdesign/theme-neutral@0.6.0(@astryxdesign/core@0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1))(gpt-tokenizer@3.4.0)(supports-color@10.2.2)':
     dependencies:
       commander: 12.1.0
       gpt-tokenizer: 3.4.0
@@ -1658,24 +1658,24 @@ snapshots:
       postcss-selector-parser: 7.1.6
       zod: 4.6.2
     optionalDependencies:
-      '@astryxdesign/core': 0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@astryxdesign/theme-neutral': 0.6.0(@astryxdesign/core@0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0)
+      '@astryxdesign/core': 0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@astryxdesign/theme-neutral': 0.6.0(@astryxdesign/core@0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
     transitivePeerDependencies:
       - '@babel/preset-env'
       - supports-color
 
-  '@astryxdesign/core@0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@astryxdesign/core@0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@stylexjs/stylex': 0.19.0
       intl-messageformat: 11.2.14
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@astryxdesign/theme-neutral@0.6.0(@astryxdesign/core@0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0)':
+  '@astryxdesign/theme-neutral@0.6.0(@astryxdesign/core@0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@astryxdesign/core': 0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      lucide-react: 1.45.0(react@19.3.0)
-      react: 19.3.0
+      '@astryxdesign/core': 0.6.0(@stylexjs/stylex@0.19.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      lucide-react: 1.45.0(react@19.3.1)
+      react: 19.3.1
 
   '@babel/code-frame@7.29.7':
     dependencies:
@@ -1962,14 +1962,14 @@ snapshots:
     optionalDependencies:
       workerd: 1.20261006.1
 
-  '@cloudflare/vite-plugin@1.63.1(vite@8.3.4(esbuild@0.28.2)(jiti@2.7.0))(wrangler@4.149.0(@cloudflare/workers-types@5.20261010.1))':
+  '@cloudflare/vite-plugin@1.63.1(vite@8.3.4(esbuild@0.28.2)(jiti@2.7.0))(wrangler@4.149.0(@cloudflare/workers-types@5.20261016.1))':
     dependencies:
       '@cloudflare/unenv-preset': 2.16.2(unenv@2.0.0-rc.24)(workerd@1.20261006.1)
       miniflare: 5.20261006.1-alpha
       unenv: 2.0.0-rc.24
       vite: 8.3.4(esbuild@0.28.2)(jiti@2.7.0)
       workerd: 1.20261006.1
-      wrangler: 4.149.0(@cloudflare/workers-types@5.20261010.1)
+      wrangler: 4.149.0(@cloudflare/workers-types@5.20261016.1)
       ws: 8.21.0
     transitivePeerDependencies:
       - '@types/node'
@@ -1991,7 +1991,7 @@ snapshots:
   '@cloudflare/workerd-windows-64@1.20261006.1':
     optional: true
 
-  '@cloudflare/workers-types@5.20261010.1': {}
+  '@cloudflare/workers-types@5.20261016.1': {}
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
@@ -2622,9 +2622,9 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  lucide-react@1.45.0(react@19.3.0):
+  lucide-react@1.45.0(react@19.3.1):
     dependencies:
-      react: 19.3.0
+      react: 19.3.1
 
   magic-string@1.4.3:
     dependencies:
@@ -2705,12 +2705,12 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.2
 
-  react-dom@19.3.0(react@19.3.0):
+  react-dom@19.3.1(react@19.3.1):
     dependencies:
-      react: 19.3.0
+      react: 19.3.1
       scheduler: 0.28.0
 
-  react@19.3.0: {}
+  react@19.3.1: {}
 
   recast@0.23.21:
     dependencies:
@@ -2897,7 +2897,7 @@ snapshots:
       '@cloudflare/workerd-linux-arm64': 1.20261006.1
       '@cloudflare/workerd-windows-64': 1.20261006.1
 
-  wrangler@4.149.0(@cloudflare/workers-types@5.20261010.1):
+  wrangler@4.149.0(@cloudflare/workers-types@5.20261016.1):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.5.0
       '@cloudflare/unenv-preset': 2.16.2(unenv@2.0.0-rc.24)(workerd@1.20261006.1)
@@ -2908,7 +2908,7 @@ snapshots:
       unenv: 2.0.0-rc.24
       workerd: 1.20261006.1
     optionalDependencies:
-      '@cloudflare/workers-types': 5.20261010.1
+      '@cloudflare/workers-types': 5.20261016.1
       fsevents: 2.3.3
     transitivePeerDependencies:
       - '@types/node'

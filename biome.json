@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.6.3/schema.json",
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
@@ -9,6 +9,7 @@
 		"includes": ["**", "!dist", "!.wrangler", "!worker-configuration.d.ts"]
 	},
 	"formatter": {
+		"includes": ["**", "!AGENTS.md", "!pnpm-lock.yaml"],
 		"indentStyle": "tab",
 		"lineWidth": 80
 	},
